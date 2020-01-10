@@ -76,12 +76,12 @@ jQuery( function ( $ ) {
 		//Reduce the opacity of stats and disable the click
 		disable_links( current_button );
 
-		Smush.progress_bar( current_button, wp_smush_msgs[action], 'show' );
+		Smush.progressBar( current_button, wp_smush_msgs[action], 'show' );
 
 		//Restore the image
 		$.post( ajaxurl, params, function ( r ) {
 
-			Smush.progress_bar( current_button, wp_smush_msgs[action], 'hide' );
+			Smush.progressBar( current_button, wp_smush_msgs[action], 'hide' );
 
 			//reset all functionality
 			enable_links( current_button );
@@ -97,7 +97,7 @@ jQuery( function ( $ ) {
 				}
 
 				if ( 'undefined' != typeof (r.data) && 'restore' === action ) {
-					Smush.update_image_stats( r.data.new_size );
+					Smush.updateImageStats( r.data.new_size );
 				}
 			} else {
 				if ( r.data.message ) {
@@ -218,7 +218,7 @@ jQuery( function ( $ ) {
 		scan_type = 'undefined' == typeof scan_type ? 'media' : scan_type;
 
 		// Remove the Skip resmush attribute from button.
-		$( 'button.wp-smush-all' ).removeAttr( 'data-smush' );
+		$( '.wp-smush-all' ).removeAttr( 'data-smush' );
 
 		// Remove notices.
 		const notices = $( '.sui-notice-top.sui-notice-success' );
@@ -262,14 +262,8 @@ jQuery( function ( $ ) {
 					}
 
 					if ( 'nextgen' === scan_type ) {
-						wp_smushit_data.bytes = parseInt( wp_smushit_data.size_before ) - parseInt( wp_smushit_data.size_after )
+						wp_smushit_data.bytes = parseInt( wp_smushit_data.size_before ) - parseInt( wp_smushit_data.size_after );
 					}
-
-					let smush_percent = ( wp_smushit_data.count_smushed / wp_smushit_data.count_total ) * 100;
-					smush_percent = WP_Smush.helpers.precise_round( smush_percent, 1 );
-
-					// Update it in stats bar.
-					$( '.wp-smush-images-percent' ).html( smush_percent );
 
 					// Hide the Existing wrapper.
 					const notices = $( '.bulk-smush-wrapper .sui-notice' );
@@ -282,14 +276,10 @@ jQuery( function ( $ ) {
 
 					// Show Bulk wrapper.
 					$( '.wp-smush-bulk-wrapper' ).show();
-
-					if ( 'undefined' !== typeof r.data.count ) {
-						update_progress_bar_resmush( r.data.count );
-					}
 				}
 				// If content is received, Prepend it.
 				if ( 'undefined' !== typeof r.data.content ) {
-					$( '.bulk-smush-wrapper .sui-box-body' ).prepend( r.data.content );
+					$( '.bulk-smush-wrapper .sui-box-body > p:first-of-type' ).after( r.data.content );
 				}
 				// If we have any notice to show.
 				if ( 'undefined' !== typeof r.data.notice ) {
@@ -308,7 +298,7 @@ jQuery( function ( $ ) {
 						$( '.super-smush-attachments .wp-smush-stats' ).html( r.data.super_smush_stats );
 					}
 				}
-				Smush.update_stats( scan_type );
+				Smush.updateStats( scan_type );
 			}
 		} ).always( function () {
 			// Hide the progress bar.
@@ -321,7 +311,8 @@ jQuery( function ( $ ) {
 
 			// Remove success message from button.
 			setTimeout( function () {
-				button.removeClass( 'smush-button-check-success' ).text( wp_smush_msgs.resmush_check );
+				button.removeClass( 'smush-button-check-success' )
+					.html( '<i class="sui-icon-update" aria-hidden="true"></i>' + wp_smush_msgs.resmush_check );
 			}, 2000 );
 
 			$( '.wp-smush-all' ).removeAttr( 'disabled' );
@@ -411,6 +402,31 @@ jQuery( function ( $ ) {
 	}
 
 	/**
+	 * When 'All' is selected for the Image Sizes setting, select all available sizes.
+	 *
+	 * @since 3.2.1
+	 */
+	$('#all-image-sizes').on('change', function() {
+		$('input[name^="wp-smush-image_sizes"]').prop('checked', true);
+	});
+
+	/**
+	 * Handle re-check api status button click (Settings)
+	 *
+	 * @since 3.2.0.2
+	 */
+	$('#wp-smush-update-api-status').on('click', function (e) {
+		e.preventDefault();
+
+		//$(this).prop('disabled', true);
+		$(this).addClass('sui-button-onload');
+
+		$.post(ajaxurl, {action: 'recheck_api_status'}, function () {
+			location.reload();
+		});
+	});
+
+	/**
 	 * Handle the Smush Stats link click
 	 */
 	$( 'body' ).on( 'click', 'a.smush-stats-details', function ( e ) {
@@ -461,6 +477,9 @@ jQuery( function ( $ ) {
 	$( 'body' ).on( 'click', '.wp-smush-nextgen-bulk', function ( e ) {
 		// prevent the default action
 		e.preventDefault();
+
+		// Remove existing Re-Smush notices.
+		$( '.wp-smush-resmush-notice' ).remove();
 
 		//Check for ids, if there is none (Unsmushed or lossless), don't call smush function
 		if ( 'undefined' === typeof wp_smushit_data ||
@@ -694,7 +713,7 @@ jQuery( function ( $ ) {
 					$( '.sui-notice-success.wp-smush-all-done' ).show();
 				}
 
-				Smush.update_stats();
+				Smush.updateStats();
 			}
 		} );
 	} );
@@ -752,7 +771,7 @@ jQuery( function ( $ ) {
 	$( 'body' ).on( 'click', '.wp-smush-trigger-bulk', function ( e ) {
 		e.preventDefault();
 		//Induce Setting button save click
-		$( 'button.wp-smush-all' ).click();
+		$( '.wp-smush-all' ).click();
 		$( 'span.sui-notice-dismiss' ).click();
 	} );
 
@@ -797,11 +816,10 @@ jQuery( function ( $ ) {
 	} );
 
 	// Handle Automatic Smush Checkbox toggle, to show/hide image size settings.
-	$( 'body' ).on( 'click', '#wp-smush-auto', function () {
-		var self = $( this );
-		var settings_wrap = $( '.wp-smush-image-size-list' );
+	$( '#column-wp-smush-auto' ).on( 'click', '#wp-smush-auto', function () {
+		const settings_wrap = $( '#column-wp-smush-auto .auto-smush-notice' );
 
-		if ( self.is( ':checked' ) ) {
+		if ( $( this ).is( ':checked' ) ) {
 			settings_wrap.show();
 		} else {
 			settings_wrap.hide();
@@ -837,15 +855,6 @@ jQuery( function ( $ ) {
 			settings_wrap.show();
 		} else {
 			settings_wrap.hide();
-		}
-	} );
-
-	//Handle, Change event in Enable Networkwide settings
-	$( '#wp-smush-networkwide' ).on( 'click', function ( e ) {
-		if ( $( this ).is( ':checked' ) ) {
-			$( '.network-settings-wrapper' ).show();
-		} else {
-			$( '.network-settings-wrapper' ).hide();
 		}
 	} );
 
@@ -953,6 +962,19 @@ jQuery( function ( $ ) {
 				'action': 'hide_api_message'
 			}
 		} );
+	} );
+
+	/**
+	 * Scroll to resize settings.
+	 *
+	 * @since 3.3.2
+	 */
+	$( '#close-resize-update-dialog' ).on( 'click', function( e ) {
+		e.preventDefault();
+
+		window.SUI.dialogs[ 'resizing-update' ].hide();
+
+		goToByScroll( '#column-wp-smush-resize' );
 	} );
 
 } );
