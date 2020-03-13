@@ -1,0 +1,3 @@
+[submodule "wp-content/plugins/sapling-plugin"]
+	path = wp-content/plugins/sapling-plugin
+	url = https://github.com/Indevver/sapling-plugin
