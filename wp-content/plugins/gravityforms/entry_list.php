@@ -1617,7 +1617,10 @@ final class GF_Entry_List_Table extends WP_List_Table {
 
 			function UpdateCount(element_id, change) {
 				var element = jQuery("#" + element_id);
-				var count = parseInt(element.html()) + change
+				var count = parseInt(element.html(),10) + change;
+				if( count < 0 ) {
+					return;
+				}
 				element.html(count + "");
 			}
 
@@ -2122,7 +2125,7 @@ final class GF_Entry_List_Table extends WP_List_Table {
 							<br /><br />
 						<?php } ?>
 
-						<input type="checkbox" name="gform_print_page_break" value="print_notes" checked="checked" id="gform_print_page_break" />
+						<input type="checkbox" name="gform_print_page_break" value="print_page_break" checked="checked" id="gform_print_page_break" />
 						<label for="gform_print_page_break"><?php esc_html_e( 'Add page break between entries', 'gravityforms' ); ?></label>
 						<br /><br />
 
