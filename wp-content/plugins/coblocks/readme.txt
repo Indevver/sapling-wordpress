@@ -4,9 +4,9 @@ Plugin URI: https://www.coblocks.com
 Contributors: coblocks, godaddy, richtabor, phpbits, eherman24, jonathanbardo, jrtashjian, sbalakr2, dmatuszak, paranoia1906
 Tags: page builder, Gutenberg blocks, WordPress blocks, gutenberg, blocks
 Requires at least: 5.0
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 1.22.0
+Stable tag: 1.24.0
 License: GPL-2.0
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,19 +124,22 @@ Developers can also apply minor style touch-ups to their themes if necessary. If
 == Changelog ==
 
 ### Enhancements
-* Control Food Item block headings from the parent Food and Drinks block [#1381](https://github.com/godaddy-wordpress/coblocks/pull/1381)
-* Introduce 29 new icons into the icon block [#1398](https://github.com/godaddy-wordpress/coblocks/pull/1398)
-* Make the available Google Fonts filterable [#1386](https://github.com/godaddy-wordpress/coblocks/pull/1386)
-* Migrate Row block to variations API [#1372](https://github.com/godaddy-wordpress/coblocks/pull/1372)
-* Persist Accordion block open state when editing a post [#1393](https://github.com/godaddy-wordpress/coblocks/pull/1393)
-* Support new block collection functionality in WordPress 5.4 [#1367](https://github.com/godaddy-wordpress/coblocks/pull/1367)
-* WordPress 5.4 compatibility changes to CoBlocks [#1380](https://github.com/godaddy-wordpress/coblocks/pull/1380)
+* Improve Share block UX [#1433](https://github.com/godaddy-wordpress/coblocks/pull/1433)
+* Use column and gutter utility classes within the Food and Drinks block [#1384](https://github.com/godaddy-wordpress/coblocks/pull/1384)
+* Migrate the Form block's submit button to a child block [#1397](https://github.com/godaddy-wordpress/coblocks/pull/1397)
+* Introduce cross browser E2E testing [#1375](https://github.com/godaddy-wordpress/coblocks/pull/1375)
 
 ### Bug Fixes
-* Conditionally enqueue slick.js for Events block [#1379](https://github.com/godaddy-wordpress/coblocks/pull/1379)
-* Fix Row block placeholder spacing [#1400](https://github.com/godaddy-wordpress/coblocks/pull/1400)
+* Fix duplicate classes with Posts block [#1443](https://github.com/godaddy-wordpress/coblocks/pull/1443)
+* Do not register if coblocksSettings is undefined [#1451](https://github.com/godaddy-wordpress/coblocks/pull/1451)
+* Fix Map block placeholder styles [#1442](https://github.com/godaddy-wordpress/coblocks/pull/1442)
+* Fix Icon block spacing when using custom links [#1430](https://github.com/godaddy-wordpress/coblocks/pull/1430)
+* Remove 100% height on front of site gallery carousels [#1436](https://github.com/godaddy-wordpress/coblocks/pull/1436)
 
 ### Misc
-* Add automated testing of block save functions [#1350](https://github.com/godaddy-wordpress/coblocks/pull/1350), [#1378](https://github.com/godaddy-wordpress/coblocks/pull/1378), [#1357](https://github.com/godaddy-wordpress/coblocks/pull/1357), [#1348](https://github.com/godaddy-wordpress/coblocks/pull/1348)
-* Callout Go as a companion theme in the readme [#1382](https://github.com/godaddy-wordpress/coblocks/pull/1382)
-* Update Form block variable names [#1373](https://github.com/godaddy-wordpress/coblocks/pull/1373)
+* Return class instance on register [#1444](https://github.com/godaddy-wordpress/coblocks/pull/1444)
+* Refactor gutter options functionality across blocks [#1445](https://github.com/godaddy-wordpress/coblocks/pull/1445)
+* Validate Composer configuration [#1388](https://github.com/godaddy-wordpress/coblocks/pull/1388)
+* Remove the options parameter passed into wp_json_encode [#1390](https://github.com/godaddy-wordpress/coblocks/pull/1390)
+* Fix variable type in coblocks_render_events_block [#1389](https://github.com/godaddy-wordpress/coblocks/pull/1389)
+* Update Canary release CircleCI deployment [#1431](https://github.com/godaddy-wordpress/coblocks/pull/1431)
